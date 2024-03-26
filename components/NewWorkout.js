@@ -102,7 +102,7 @@ export default function NewWorkout() {
     const renderItem = ({item}) => {
         return (
         <View style={styles.item}>
-            <Text>{item.name}</Text>
+            <Text style={styles.itemText}>{item.name}</Text>
             <Image style={{width:250, height: 100}}
                 source={{uri: item.gifUrl}} />
         </View>
@@ -181,29 +181,44 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center"
     },
     input: {
-        width:200, 
-        borderColor: 'gray', 
-        borderWidth: 1,
-        textAlign: "center"
+      width: 200,
+      borderColor: 'gray',
+      borderWidth: 1,
+      textAlign: "center"
     },
     dropdown: {
-        width: 200, 
-        padding: 10, 
-        position: "relative", 
-        zIndex: 1000
+      width: 200,
+      padding: 10,
+      position: "relative",
+      zIndex: 1000
     },
     highestDropdown: {
-        width: 200, 
-        padding: 10, 
-        position: "relative", 
-        zIndex: 2000
+      width: 200,
+      padding: 10,
+      position: "relative",
+      zIndex: 2000
     },
     item: {
-        alignItems: 'center',
-        padding: 16,
-      },
+      alignItems: 'center',
+      padding: 16,
+      backgroundColor: '#f5f5f5',
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: '#ddd', // Optional subtle border
+    },
+    itemText: { // New style for exercise names
+      fontSize: 16,
+      fontFamily: 'Cochin',
+      lineHeight: 24,
+      color: 'black',
+    },
+    image: {
+      width: 250,
+      height: 100,
+      resizeMode: 'contain',
+      borderRadius: 5,
+    },
   });
