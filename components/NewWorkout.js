@@ -1,8 +1,10 @@
-import { useRef, useState } from "react";
-import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Button, Alert, Keyboard } from "react-native"
+import { useRef, useState, forwardRef } from "react";
+import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Button, Alert, Keyboard, FlatList, Image, ScrollView } from "react-native"
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function NewWorkout() {
+    const [exercises, setExercises] = useState([])
+
     const [open, setOpen] = useState(false);
     const [bodypartOpen, setBodypartOpen] = useState(false)
     const [equipmentOpen, setEquipmentOpen] = useState(false)
@@ -59,11 +61,6 @@ export default function NewWorkout() {
 
     const [search, setSearch] = useState("")
 
-    const dropDownRef = useRef();
-    const bodypartDropDownRef = useRef()
-    const equipmentDropDownRef = useRef()
-
-
     const closeDropDown = () => {
         setOpen(false);
         setBodypartOpen(false)
@@ -74,11 +71,11 @@ export default function NewWorkout() {
     const searchExercise = async () => {
         let url = ""
         if (value === "name") {
-            url = `https://exercisedb.p.rapidapi.com/exercises/name/${search}?limit=10`
+            url = `https://exercisedb.p.rapidapi.com/exercises/name/${search}?limit=100`
         } else if (value === "bodypart") {
-            url = `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodypart}?limit=10`
+            url = `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodypart}?limit=100`
         } else if (value === "equipment") {
-            url = `https://exercisedb.p.rapidapi.com/exercises/equipment/${equipment}?limit=10`
+            url = `https://exercisedb.p.rapidapi.com/exercises/equipment/${equipment}?limit=100`
         } else {
             Alert.alert("Choose a search term")
         }
@@ -93,62 +90,91 @@ export default function NewWorkout() {
         
         try {
             const response = await fetch(url, options);
-            const result = await response.text();
+            const result = await response.json();
             console.log(result);
             console.log(search)
+            setExercises(result)
         } catch (error) {
             console.error(error);
         }
     }
 
-    return (
-        <TouchableWithoutFeedback onPress={closeDropDown}>
-            <View style={styles.container}>
-                <Text>Exercises</Text>
-                {value === "bodypart" && 
-                <View style={{width: 200, padding: 10}}>
-                    <DropDownPicker 
-                        open={bodypartOpen}
-                        value={bodypart}
-                        items={bodypartItems}
-                        setOpen={setBodypartOpen}
-                        setValue={setBodypart}
-                        setItems={setBodypartItems}
-                        ref={bodypartDropDownRef}
-                    />
-                    </View>
-                }
-                {value === "name" && 
-                    <TextInput style={styles.input} placeholder="Search" onChangeText={(text) => setSearch(text.toLowerCase())} />
-                }
-                {value === "equipment" && 
-                <View style={{width: 200, padding: 10}}>
-                    <DropDownPicker 
-                        open={equipmentOpen}
-                        value={equipment}
-                        items={equipmentItems}
-                        setOpen={setEquipmentOpen}
-                        setValue={setEquipment}
-                        setItems={setEquipmentItems}
-                        ref={equipmentDropDownRef}
-                    />
-                    </View>
-                }
-                <View style={{width: 200, padding: 10}}>
-                    <DropDownPicker
+    const renderItem = ({item}) => {
+        return (
+        <View style={styles.item}>
+            <Text>{item.name}</Text>
+            <Image style={{width:250, height: 100}}
+                source={{uri: item.gifUrl}} />
+        </View>
+        )
+    }
+
+    const CustomDropDownPicker = forwardRef((props, ref) => {
+        return <DropDownPicker ref={ref} {...props} />;
+      });
+
+      return (
+        <View style={styles.container}>
+            <Text style={{fontWeight: "bold"}}>Search for exercises</Text>
+            <TouchableWithoutFeedback onPress={closeDropDown}>
+                <View style={styles.highestDropdown}>
+                    <CustomDropDownPicker
                         open={open}
                         value={value}
                         items={items}
                         setOpen={setOpen}
                         setValue={setValue}
                         setItems={setItems}
-                        ref={dropDownRef}
                     />
                 </View>
-                <Button onPress={searchExercise} title="Search" />
+            </TouchableWithoutFeedback>
+            {value === "bodypart" && 
+                <TouchableWithoutFeedback onPress={closeDropDown}>
+                    <View style={styles.dropdown}>
+                        <CustomDropDownPicker 
+                            open={bodypartOpen}
+                            value={bodypart}
+                            items={bodypartItems}
+                            setOpen={setBodypartOpen}
+                            setValue={setBodypart}
+                            setItems={setBodypartItems}
+                        />
+                    </View>
+                </TouchableWithoutFeedback>
+            }
+            {value === "name" && 
+                <TextInput style={styles.input} placeholder="Search" onChangeText={(text) => setSearch(text.toLowerCase())} />
+            }
+            {value === "equipment" && 
+                <TouchableWithoutFeedback onPress={closeDropDown}>
+                    <View style={styles.dropdown}>
+                        <CustomDropDownPicker 
+                            open={equipmentOpen}
+                            value={equipment}
+                            items={equipmentItems}
+                            setOpen={setEquipmentOpen}
+                            setValue={setEquipment}
+                            setItems={setEquipmentItems}
+                        />
+                    </View>
+                </TouchableWithoutFeedback>
+            }
+            <Button onPress={searchExercise} title="Search" />
+            {exercises &&
+            <View style={{flex: 1}}>
+                <FlatList 
+                    data={exercises}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={{
+                        flexGrow: 1,
+                    }}
+                />
             </View>
-        </TouchableWithoutFeedback>
+            }
+        </View>
     )
+    
 }
 
 const styles = StyleSheet.create({
@@ -159,12 +185,25 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     input: {
-        width:200  , 
+        width:200, 
         borderColor: 'gray', 
         borderWidth: 1,
         textAlign: "center"
     },
     dropdown: {
-
-    }
+        width: 200, 
+        padding: 10, 
+        position: "relative", 
+        zIndex: 1000
+    },
+    highestDropdown: {
+        width: 200, 
+        padding: 10, 
+        position: "relative", 
+        zIndex: 2000
+    },
+    item: {
+        alignItems: 'center',
+        padding: 16,
+      },
   });
