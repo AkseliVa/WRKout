@@ -1,9 +1,9 @@
-import { useRef, useState, forwardRef } from "react";
-import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Button, Alert, Keyboard, FlatList, Image, Modal } from "react-native"
+import * as React from 'react'
+import {  useState, forwardRef } from "react";
+import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Button, Alert, Keyboard, FlatList, Image } from "react-native"
 import DropDownPicker from 'react-native-dropdown-picker';
 
-import ModalComponent from "./ModalComponent";
-import ExerciseItem from "./Exerciseitem";
+import ModalComponent from "../components/ModalComponent";
 import SearchTermItems from "./SearchTermItem";
 import BodypartItem from "./BodypartItem";
 import EquipmentItem from "./EquipmentItem";
@@ -57,13 +57,27 @@ export default function NewWorkout() {
         
         try {
             const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
             const result = await response.json();
             console.log(result);
             console.log(search)
             setExercises(result)
         } catch (error) {
-            console.error(error);
+            console.error("error fetching", error);
         }
+    }
+
+    const renderItem = ({item}) => {
+        return (
+        <View style={styles.item}>
+            <Text style={styles.itemText}>{item.name}</Text>
+            <Image style={{width:250, height: 100}}
+                source={{uri: item.gifUrl}} />
+            <Button title="ADD TO WORKOUT" onPress={() => AddExercise(item)} />
+        </View>
+        )
     }
 
     const AddExercise = (item) => {
@@ -82,6 +96,7 @@ export default function NewWorkout() {
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
                 setAddedExercises={setAddedExercises}
+                addedExercises={addedExercises}
             />
             <Text style={{fontWeight: "bold"}}>Search for exercises</Text>
             <TouchableWithoutFeedback onPress={closeDropDown}>
@@ -128,18 +143,18 @@ export default function NewWorkout() {
                 </TouchableWithoutFeedback>
             }
             <Button onPress={searchExercise} title="Search" />
-            {exercises &&
+            {exercises && (
             <View style={{flex: 1}}>
-                <FlatList 
+                 <FlatList 
                     data={exercises}
-                    renderItem={({ item }) => <ExerciseItem item={item} AddExercise={AddExercise} />}
+                    renderItem={renderItem}
                     keyExtractor={(item) => item.id}
                     contentContainerStyle={{
                         flexGrow: 1,
                     }}
                 />
             </View>
-            }
+            )}
         </View>
     )
     
@@ -175,6 +190,18 @@ const styles = StyleSheet.create({
       resizeMode: 'contain',
       borderRadius: 5,
     },
-    
-
+    item: {
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#ddd',
+      },
+      itemText: {
+        fontSize: 16,
+        fontFamily: 'Cochin',
+        lineHeight: 24,
+        color: 'black',
+      },
   });

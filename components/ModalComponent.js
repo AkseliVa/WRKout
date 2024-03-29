@@ -1,7 +1,28 @@
-import React from "react";
-import { Modal, Text, View, Button, Alert, StyleSheet } from "react-native";
+import * as React from 'react'
+import { Modal, Text, View, Button, Alert, StyleSheet, FlatList, Image } from "react-native";
 
-const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises }) => {
+const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, addedExercises }) => {
+
+  const renderItem = ({item, index}) => {
+    return (
+    <View style={styles.item}>
+        <Text style={styles.itemText}>{item.name}</Text>
+        <Image style={{width:250, height: 100}}
+            source={{uri: item.gifUrl}} />
+        <Button title="Delete" onPress={() => deleteExercise(index)} />
+    </View>
+    )
+  }
+
+  const deleteExercise = (index) => {
+    // Create a copy of the addedExercises array
+    const updatedExercises = [...addedExercises];
+    // Remove the item at the specified index
+    updatedExercises.splice(index, 1);
+    // Update the state with the modified array
+    setAddedExercises(updatedExercises);
+  };
+
     return (
         <Modal
             animationType="slide"
@@ -15,6 +36,20 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises }) =>
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <Text style={styles.modalText}>WORKOUT</Text>
+
+                    {addedExercises &&
+                      <View style={{flex: 1}}>
+                          <FlatList 
+                              data={addedExercises}
+                              renderItem={renderItem}
+                              keyExtractor={(item) => item.id}
+                              contentContainerStyle={{
+                                  flexGrow: 1,
+                              }}
+                          />
+                      </View>
+                      }
+
                     <Button title="Close" onPress={() => setModalVisible(false)} />
                     <Button title="Reset" onPress={() => setAddedExercises([])} />
                 </View>
@@ -50,5 +85,19 @@ centeredView: {
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
-  }
+  },
+  item: {
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  itemText: {
+    fontSize: 16,
+    fontFamily: 'Cochin',
+    lineHeight: 24,
+    color: 'black',
+  },
 })
