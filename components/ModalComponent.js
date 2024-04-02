@@ -1,19 +1,14 @@
 import * as React from 'react'
 import { Modal, Text, View, Button, Alert, StyleSheet, FlatList, Image } from "react-native";
-import { initializeApp } from 'firebase/app';
-import { getDatabase, push, ref, onValue, set } from 'firebase/database';
+import { push, ref, set } from 'firebase/database';
 
 const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, addedExercises, database }) => {
 
   const saveWorkout = () => {
-    // Generate a unique identifier for the workout
     const workoutKey = push(ref(database, 'workouts/')).key;
-  
-    // Create a reference to the workout location
     const workoutRef = ref(database, `workouts/${workoutKey}`);
-  
-    // Set the exercises under the workout identifier
     set(workoutRef, addedExercises);
+    setAddedExercises([])
   };
 
   const renderItem = ({item, index}) => {

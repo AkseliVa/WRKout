@@ -8,7 +8,7 @@ import { initializeApp } from 'firebase/app';
 
 import Home from './components/Home';
 import NewWorkout from './components/NewWorkout';
-import History from './components/MyWorkouts';
+import MyWorkouts from './components/MyWorkouts';
 
 const Tab = createBottomTabNavigator()
 
@@ -52,7 +52,9 @@ export default function App() {
         <Tab.Screen name="New Workout">
           {() => <NewWorkout database={database} />}
         </Tab.Screen>
-        <Tab.Screen name="My Workouts" component={History}></Tab.Screen>
+        <Tab.Screen name="My Workouts">
+          {() => <MyWorkouts database={database} />}
+        </Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
   );
