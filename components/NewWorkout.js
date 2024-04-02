@@ -8,7 +8,7 @@ import SearchTermItems from "./SearchTermItem";
 import BodypartItem from "./BodypartItem";
 import EquipmentItem from "./EquipmentItem";
 
-export default function NewWorkout() {
+export default function NewWorkout({database}) {
     const [exercises, setExercises] = useState([])
     const [addedExercises, setAddedExercises] = useState([])
 
@@ -97,6 +97,7 @@ export default function NewWorkout() {
                 setModalVisible={setModalVisible}
                 setAddedExercises={setAddedExercises}
                 addedExercises={addedExercises}
+                database={database}
             />
             <Text style={{fontWeight: "bold"}}>Search for exercises</Text>
             <TouchableWithoutFeedback onPress={closeDropDown}>

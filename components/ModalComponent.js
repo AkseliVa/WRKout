@@ -1,7 +1,20 @@
 import * as React from 'react'
 import { Modal, Text, View, Button, Alert, StyleSheet, FlatList, Image } from "react-native";
+import { initializeApp } from 'firebase/app';
+import { getDatabase, push, ref, onValue, set } from 'firebase/database';
 
-const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, addedExercises }) => {
+const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, addedExercises, database }) => {
+
+  const saveWorkout = () => {
+    // Generate a unique identifier for the workout
+    const workoutKey = push(ref(database, 'workouts/')).key;
+  
+    // Create a reference to the workout location
+    const workoutRef = ref(database, `workouts/${workoutKey}`);
+  
+    // Set the exercises under the workout identifier
+    set(workoutRef, addedExercises);
+  };
 
   const renderItem = ({item, index}) => {
     return (
@@ -15,11 +28,8 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
   }
 
   const deleteExercise = (index) => {
-    // Create a copy of the addedExercises array
     const updatedExercises = [...addedExercises];
-    // Remove the item at the specified index
     updatedExercises.splice(index, 1);
-    // Update the state with the modified array
     setAddedExercises(updatedExercises);
   };
 
@@ -49,7 +59,7 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
                           />
                       </View>
                       }
-
+                    <Button title="Save" onPress={() => saveWorkout()} />
                     <Button title="Close" onPress={() => setModalVisible(false)} />
                     <Button title="Reset" onPress={() => setAddedExercises([])} />
                 </View>
@@ -68,7 +78,8 @@ centeredView: {
     marginTop: 22,
   },
   modalView: {
-    margin: 20,
+    width: 300,
+    height: 600,
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
