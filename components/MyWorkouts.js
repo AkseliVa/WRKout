@@ -3,37 +3,71 @@ import { useEffect, useState } from 'react'
 import { ref, set, onValue } from 'firebase/database';
 
 export default function MyWorkouts({database}) {
-    const [items, setItems] = useState([])
+    const [workouts, setWorkouts] = useState([])
 
     useEffect(() => {
-        const itemsRef = ref(database, 'workouts/');
-        onValue(itemsRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                const exercisesArray = Object.values(data).flatMap(workout => workout);
-            } else {
-                setItems([])
-            }
-            setItems(exercisesArray);
-        })
-        }, []);
+        const fetchWorkouts = () => {
+            const itemsRef = ref(database, 'workouts/');
+            onValue(itemsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const workoutsArray = Object.keys(data).map(key => ({
+                        id: key,
+                        name: data[key].workoutName,
+                        exercises: data[key].exercises
+                    }));
+                    setWorkouts(workoutsArray);
+                } else {
+                    setWorkouts([]);
+                }
+            });
+        };
 
-        const renderItem = ({item, index}) => {
-            return (
-            <View style={styles.item}>
-                <Text style={styles.itemText}>{item.name}</Text>
-                <Image style={{width:250, height: 100}}
-                    source={{uri: item.gifUrl}} />
+        fetchWorkouts();
+    }, [database]);
+
+    const deleteWorkout = (workoutId) => {
+        const workoutRef = ref(database, `workouts/${workoutId}`);
+        set(workoutRef, null)
+            .then(() => {
+                console.log("Workout deleted successfully");
+            })
+            .catch((error) => {
+                console.error("Error deleting workout: ", error);
+            });
+    };
+
+    const renderItem = ({ item }) => {
+        return (
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.workoutName}>{item.name}</Text>
+                    <Button title="Delete" onPress={() => deleteWorkout(item.id)}/>
+                </View>
+                <FlatList
+                    data={item.exercises}
+                    renderItem={({ item: exercise }) => (
+                        <View style={styles.item}>
+                            <Text style={styles.itemText}>{exercise.name}</Text>
+                            <Image style={{width:250, height: 200}}
+                                source={{uri: exercise.gifUrl}} />
+                        </View>
+                    )}
+                    keyExtractor={(exercise) => exercise.id}
+                    contentContainerStyle={{
+                        flexGrow: 1,
+                    }}
+                />
             </View>
-            )
-          }
+        );
+    };
 
     return (
         <View style={styles.container}>
-            {items && 
+            {workouts && 
                 <View style={{flex: 1}}>
                     <FlatList 
-                        data={items}
+                        data={workouts}
                         renderItem={renderItem}
                         keyExtractor={(item) => item.id}
                         contentContainerStyle={{
@@ -42,8 +76,8 @@ export default function MyWorkouts({database}) {
                     />
                 </View>
             }           
-            {items.length === 0 && 
-                <Text>No workouts yet</Text>
+            {workouts.length === 0 && 
+                <Text style={{flex: 1}}>No workouts yet</Text>
             }
         </View>
     )
@@ -70,4 +104,13 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         color: 'black',
       },
+      workoutName: {
+        fontSize: 25
+      },
+      header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+    },
   });
