@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Text, View, Button, Alert, StyleSheet, FlatList, Image, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { Modal, Text, View, Button, Alert, StyleSheet, FlatList, Image, TextInput, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
 import { push, ref, set } from 'firebase/database';
+import RNModal from 'react-native-modal'
 
 const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, addedExercises, database }) => {
     const [workoutName, setWorkoutName] = useState("");
@@ -40,7 +41,7 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
     };
 
     return (
-        <Modal
+        <RNModal
             animationType="slide"
             transparent={true}
             visible={modalVisible}
@@ -49,7 +50,6 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
                 setModalVisible(!modalVisible);
             }}
         >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>WORKOUT</Text>
@@ -61,7 +61,7 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
                         />
 
                         {addedExercises &&
-                            <View style={{ flex: 1 }}>
+                            <View style={{flex: 1}}>
                                 <FlatList
                                     data={addedExercises}
                                     renderItem={renderItem}
@@ -69,7 +69,13 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
                                     contentContainerStyle={{
                                         flexGrow: 1,
                                     }}
+                                    style={{flex: 1}}
                                 />
+                            </View>
+                        }
+                        {addedExercises.length === 0 && 
+                            <View style={{flex: 1}}>
+                                <Text>No exercises added yet</Text>
                             </View>
                         }
                         <Button title="Save" onPress={saveWorkout} />
@@ -77,8 +83,7 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
                         <Button title="Reset" onPress={() => setAddedExercises([])} />
                     </View>
                 </View>
-            </TouchableWithoutFeedback>
-        </Modal>
+        </RNModal>
     );
 };
 
@@ -132,5 +137,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         paddingLeft: 10,
         marginBottom: 20,
+        color: "black"
     },
 });

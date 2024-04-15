@@ -61,8 +61,6 @@ export default function NewWorkout({database}) {
                 throw new Error('Network response was not ok');
             }
             const result = await response.json();
-            console.log(result);
-            console.log(search)
             setExercises(result)
         } catch (error) {
             console.error("error fetching", error);
@@ -82,7 +80,6 @@ export default function NewWorkout({database}) {
 
     const AddExercise = (item) => {
         setAddedExercises(prevExercises => [...prevExercises, item]);
-        console.log(addedExercises)
     }
 
     const CustomDropDownPicker = forwardRef((props, ref) => {
