@@ -68,12 +68,18 @@ export default function NewWorkout({database}) {
     }
 
     const renderItem = ({item}) => {
+        const isAdded = addedExercises.some(exercise => exercise.id === item.id);
+
         return (
         <View style={styles.item}>
             <Text style={styles.itemText}>{item.name}</Text>
             <Image style={{width:250, height: 100}}
                 source={{uri: item.gifUrl}} />
+            {isAdded ? (
+                <Text>Added</Text>
+            ) : (
             <Button title="ADD TO WORKOUT" onPress={() => AddExercise(item)} />
+            )}
         </View>
         )
     }
