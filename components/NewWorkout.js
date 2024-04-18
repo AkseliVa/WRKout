@@ -149,7 +149,7 @@ export default function NewWorkout({database}) {
             }
             <Button onPress={searchExercise} title="Search" />
             {exercises && (
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, width: "100%"}}>
                  <FlatList 
                     data={exercises}
                     renderItem={renderItem}
