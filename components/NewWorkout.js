@@ -2,6 +2,7 @@ import * as React from 'react'
 import {  useState, forwardRef } from "react";
 import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Button, Alert, Keyboard, FlatList, Image } from "react-native"
 import DropDownPicker from 'react-native-dropdown-picker';
+import { AntDesign } from '@expo/vector-icons';
 
 import ModalComponent from "../components/ModalComponent";
 import SearchTermItems from "./SearchTermItem";
@@ -76,7 +77,7 @@ export default function NewWorkout({database}) {
             <Image style={{width:250, height: 100}}
                 source={{uri: item.gifUrl}} />
             {isAdded ? (
-                <Text>Added</Text>
+                <AntDesign style={{paddingTop: 15}} name="checkcircle" size={24} color="black" />
             ) : (
             <Button title="ADD TO WORKOUT" onPress={() => AddExercise(item)} />
             )}

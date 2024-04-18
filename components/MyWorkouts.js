@@ -15,7 +15,7 @@ export default function MyWorkouts({ database }) {
                         id: key,
                         name: data[key].workoutName,
                         exercises: data[key].exercises,
-                        isExpanded: false, // Track whether the FlatList is expanded or not
+                        isExpanded: false,
                     }));
                     setWorkouts(workoutsArray);
                 } else {

@@ -1,18 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getDatabase, push, ref, onValue, set } from 'firebase/database';
+import { getDatabase } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 
 import Home from './components/Home';
 import NewWorkout from './components/NewWorkout';
 import MyWorkouts from './components/MyWorkouts';
+import { MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-paper';
 
 const Tab = createBottomTabNavigator()
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCybN7bvjKJ0oT6XtrruBGQnAGpXX6fBEY",
   authDomain: "workouts-86a8d.firebaseapp.com",
@@ -23,13 +23,22 @@ const firebaseConfig = {
   appId: "1:199288975711:web:dd5b4e6ccf653a230c46ea"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 const database = getDatabase(app);
 
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'tomato',
+    secondary: 'yellow',
+  },
+};
+
 export default function App() {
   return (
+    <PaperProvider theme={theme}>
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -57,7 +66,9 @@ export default function App() {
         </Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
+    </PaperProvider>
   );
+  
 }
 
 const styles = StyleSheet.create({
