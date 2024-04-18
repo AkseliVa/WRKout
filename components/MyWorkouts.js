@@ -1,9 +1,9 @@
-import { Text, StyleSheet, View, FlatList, Image, Button } from "react-native"
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { Text, StyleSheet, View, FlatList, Image, Button, TouchableOpacity } from 'react-native';
 import { ref, set, onValue } from 'firebase/database';
 
-export default function MyWorkouts({database}) {
-    const [workouts, setWorkouts] = useState([])
+export default function MyWorkouts({ database }) {
+    const [workouts, setWorkouts] = useState([]);
 
     useEffect(() => {
         const fetchWorkouts = () => {
@@ -11,10 +11,11 @@ export default function MyWorkouts({database}) {
             onValue(itemsRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    const workoutsArray = Object.keys(data).map(key => ({
+                    const workoutsArray = Object.keys(data).map((key) => ({
                         id: key,
                         name: data[key].workoutName,
-                        exercises: data[key].exercises
+                        exercises: data[key].exercises,
+                        isExpanded: false, // Track whether the FlatList is expanded or not
                     }));
                     setWorkouts(workoutsArray);
                 } else {
@@ -30,65 +31,73 @@ export default function MyWorkouts({database}) {
         const workoutRef = ref(database, `workouts/${workoutId}`);
         set(workoutRef, null)
             .then(() => {
-                console.log("Workout deleted successfully");
+                console.log('Workout deleted successfully');
             })
             .catch((error) => {
-                console.error("Error deleting workout: ", error);
+                console.error('Error deleting workout: ', error);
             });
+    };
+
+    const toggleExpand = (workoutId) => {
+        setWorkouts((prevWorkouts) =>
+            prevWorkouts.map((workout) =>
+                workout.id === workoutId ? { ...workout, isExpanded: !workout.isExpanded } : workout
+            )
+        );
     };
 
     const renderItem = ({ item }) => {
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
+                <TouchableOpacity onPress={() => toggleExpand(item.id)}>
                     <Text style={styles.workoutName}>{item.name}</Text>
-                    <Button title="Delete" onPress={() => deleteWorkout(item.id)}/>
-                </View>
-                <FlatList
-                    data={item.exercises}
-                    renderItem={({ item: exercise }) => (
-                        <View style={styles.item}>
-                            <Text style={styles.itemText}>{exercise.name}</Text>
-                            <Image style={{width:250, height: 200}}
-                                source={{uri: exercise.gifUrl}} />
-                        </View>
-                    )}
-                    keyExtractor={(exercise) => exercise.id}
-                    contentContainerStyle={{
-                        flexGrow: 1,
-                    }}
-                />
+                </TouchableOpacity>
+                {item.isExpanded && (
+                    <>
+                        <Button title="Delete" onPress={() => deleteWorkout(item.id)} />
+                        <FlatList
+                            data={item.exercises}
+                            renderItem={({ item: exercise }) => (
+                                <View style={styles.item}>
+                                    <Text style={styles.itemText}>{exercise.name}</Text>
+                                    <Image style={{ width: 250, height: 200 }} source={{ uri: exercise.gifUrl }} />
+                                </View>
+                            )}
+                            keyExtractor={(exercise) => exercise.id}
+                            contentContainerStyle={{
+                                flexGrow: 1,
+                            }}
+                        />
+                    </>
+                )}
             </View>
         );
     };
 
     return (
         <View style={styles.container}>
-            {workouts && 
-                <View style={{flex: 1}}>
-                    <FlatList 
-                        data={workouts}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        contentContainerStyle={{
-                            flexGrow: 1,
+            {workouts.length > 0 ? (
+                <FlatList
+                    data={workouts}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={{
+                        flexGrow: 1,
                     }}
-                    />
-                </View>
-            }           
-            {workouts.length === 0 && 
-                <Text style={{flex: 1}}>No workouts yet</Text>
-            }
+                />
+            ) : (
+                <Text>No workouts yet</Text>
+            )}
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     item: {
         alignItems: 'center',
@@ -97,20 +106,15 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#ddd',
-      },
-      itemText: {
+    },
+    itemText: {
         fontSize: 16,
         fontFamily: 'Cochin',
         lineHeight: 24,
         color: 'black',
-      },
-      workoutName: {
-        fontSize: 25
-      },
-      header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+    },
+    workoutName: {
+        fontSize: 25,
         marginBottom: 10,
     },
-  });
+});
