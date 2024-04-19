@@ -95,7 +95,7 @@ export default function MyWorkouts({ database }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: "#c3195d",
         alignItems: 'center',
         justifyContent: 'center',
     },

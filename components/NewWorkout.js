@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {  useState, forwardRef } from "react";
-import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Button, Alert, Keyboard, FlatList, Image } from "react-native"
+import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Button, Alert, Keyboard, FlatList, Image, Pressable } from "react-native"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -95,7 +95,9 @@ export default function NewWorkout({database}) {
 
       return (
         <View style={styles.container}>
-            <Button title="Show Workout" onPress={() => setModalVisible(true)} />
+            <Pressable style={styles.button} onPress={() => setModalVisible(true)}>
+                <Text style={styles.text}>Show Workout</Text>
+            </Pressable>
             <ModalComponent
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
@@ -103,7 +105,7 @@ export default function NewWorkout({database}) {
                 addedExercises={addedExercises}
                 database={database}
             />
-            <Text style={{fontWeight: "bold"}}>Search for exercises</Text>
+            <Text style={{fontWeight: "bold", fontSize: 20, margin: 15, color: "white"}}>Search for exercises</Text>
             <TouchableWithoutFeedback onPress={closeDropDown}>
                 <View style={styles.highestDropdown}>
                     <CustomDropDownPicker
@@ -147,7 +149,9 @@ export default function NewWorkout({database}) {
                     </View>
                 </TouchableWithoutFeedback>
             }
-            <Button onPress={searchExercise} title="Search" />
+            <Pressable style={styles.button} onPress={searchExercise}>
+                <Text>Search</Text>
+            </Pressable>
             {exercises && (
             <View style={{flex: 1, width: "100%"}}>
                  <FlatList 
@@ -168,8 +172,8 @@ export default function NewWorkout({database}) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
-      alignItems: "center"
+      alignItems: "center",
+      backgroundColor: "#c3195d",
     },
     input: {
       width: 200,
@@ -209,4 +213,16 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         color: 'black',
       },
+      button: {
+        padding: 15,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
+        borderRadius: 10,
+        margin: 15,
+        shadowColor: '#680747',
+        shadowOffset: {width: -2, height: 4},
+        shadowOpacity: 10,
+        shadowRadius: 5,
+      }
   });

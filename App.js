@@ -27,22 +27,19 @@ const app = initializeApp(firebaseConfig);
 
 const database = getDatabase(app);
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: 'tomato',
-    secondary: 'yellow',
-  },
-};
-
 export default function App() {
   return (
-    <PaperProvider theme={theme}>
+    <PaperProvider>
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarIcon: ({  color, size}) => {
+          headerStyle: {
+            backgroundColor: "#680747",
+          },
+          tabBarStyle: {
+            backgroundColor: "#680747"
+          },
+          tabBarIcon: ({  color, size }) => {
             let iconName;
 
             if (route.name === "Home") {
@@ -53,15 +50,32 @@ export default function App() {
               iconName="history"
             }
 
-            return <MaterialCommunityIcons name={iconName} size={size} color={color} />
-          }
+            return <MaterialCommunityIcons name={iconName} size={size} color={"white"} />
+          },
         })}
       >
-        <Tab.Screen name="Home" component={Home}></Tab.Screen>
-        <Tab.Screen name="New Workout">
+        <Tab.Screen 
+          name="Home" 
+          component={Home}
+          options={{ 
+            headerTintColor: "white"
+          }}  
+        >           
+          </Tab.Screen>
+        <Tab.Screen 
+          name="New Workout"
+          options={{ 
+            headerTintColor: "white"
+          }} 
+        >
           {() => <NewWorkout database={database} />}
         </Tab.Screen>
-        <Tab.Screen name="My Workouts">
+        <Tab.Screen 
+          name="My Workouts"
+          options={{ 
+            headerTintColor: "white"
+          }} 
+        >
           {() => <MyWorkouts database={database} />}
         </Tab.Screen>
       </Tab.Navigator>
@@ -72,10 +86,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  topNav: {
+    backgroundColor: "#c3195d"
+  }
 });
