@@ -1,8 +1,12 @@
-import { Text, StyleSheet, View } from "react-native"
+import { Text, StyleSheet, View, Image } from "react-native"
 
 export default function Home() {
     return (
         <View style={styles.container}>
+            <Image
+                style={{width: 250, height: 100, marginTop: -150, marginBottom: 50, borderRadius: 10}}
+                source={require('../WRKOUT-logo.png')}
+            />
             <Text style={styles.header}>The App For Your Workout</Text>
             <Text style={styles.header}>Needs</Text>
             <Text style={styles.text}>In the "New Workout" page you can</Text>
@@ -19,7 +23,7 @@ export default function Home() {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "#c3195d",
+      backgroundColor: "#bb0d22",
       alignItems: 'center',
       justifyContent: 'center',
     },

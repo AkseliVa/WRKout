@@ -86,7 +86,7 @@ export default function MyWorkouts({ database }) {
                     }}
                 />
             ) : (
-                <Text>No workouts yet</Text>
+                <Text style={{color: "white", fontSize: 30}}>No workouts yet</Text>
             )}
         </View>
     );
@@ -95,7 +95,7 @@ export default function MyWorkouts({ database }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#c3195d",
+        backgroundColor: "#bb0d22",
         alignItems: 'center',
         justifyContent: 'center',
     },

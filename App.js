@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -34,10 +34,10 @@ export default function App() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerStyle: {
-            backgroundColor: "#680747",
+            backgroundColor: "#4d0b0b",
           },
           tabBarStyle: {
-            backgroundColor: "#680747"
+            backgroundColor: "#4d0b0b"
           },
           tabBarIcon: ({  color, size }) => {
             let iconName;
@@ -58,7 +58,7 @@ export default function App() {
           name="Home" 
           component={Home}
           options={{ 
-            headerTintColor: "white"
+            headerTintColor: "white",
           }}  
         >           
           </Tab.Screen>
