@@ -57,6 +57,7 @@ export default function MyWorkouts({ database }) {
                     <Pressable style={styles.button} onPress={() => deleteWorkout(item.id)}>
                         <Text>Delete</Text>
                     </Pressable>
+                    <View style={{flex: 1, width: "100%"}}>
                         <FlatList
                             data={item.exercises}
                             renderItem={({ item: exercise }) => (
@@ -70,6 +71,7 @@ export default function MyWorkouts({ database }) {
                                 flexGrow: 1,
                             }}
                         />
+                    </View>
                     </>
                 )}
             </View>
@@ -79,14 +81,16 @@ export default function MyWorkouts({ database }) {
     return (
         <View style={styles.container}>
             {workouts.length > 0 ? (
-                <FlatList
-                    data={workouts}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={{
-                        flexGrow: 1,
-                    }}
-                />
+                <View style={{flex: 1, width: "100%"}}>
+                    <FlatList
+                        data={workouts}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        contentContainerStyle={{
+                            flexGrow: 1,
+                        }}
+                    />
+                </View>
             ) : (
                 <Text style={{color: "white", fontSize: 30, fontWeight: "bold"}}>No workouts yet</Text>
             )}
