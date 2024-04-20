@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, FlatList, Image, Button, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, FlatList, Image, Button, TouchableOpacity, Pressable } from 'react-native';
 import { ref, set, onValue } from 'firebase/database';
 
 export default function MyWorkouts({ database }) {
@@ -49,12 +49,14 @@ export default function MyWorkouts({ database }) {
     const renderItem = ({ item }) => {
         return (
             <View style={styles.container}>
-                <TouchableOpacity onPress={() => toggleExpand(item.id)}>
+                <Pressable onPress={() => toggleExpand(item.id)} style={styles.button}>
                     <Text style={styles.workoutName}>{item.name}</Text>
-                </TouchableOpacity>
+                </Pressable>
                 {item.isExpanded && (
                     <>
-                        <Button title="Delete" onPress={() => deleteWorkout(item.id)} />
+                    <Pressable style={styles.button} onPress={() => deleteWorkout(item.id)}>
+                        <Text>Delete</Text>
+                    </Pressable>
                         <FlatList
                             data={item.exercises}
                             renderItem={({ item: exercise }) => (
@@ -86,7 +88,7 @@ export default function MyWorkouts({ database }) {
                     }}
                 />
             ) : (
-                <Text style={{color: "white", fontSize: 30}}>No workouts yet</Text>
+                <Text style={{color: "white", fontSize: 30, fontWeight: "bold"}}>No workouts yet</Text>
             )}
         </View>
     );
@@ -109,12 +111,24 @@ const styles = StyleSheet.create({
     },
     itemText: {
         fontSize: 16,
-        fontFamily: 'Cochin',
         lineHeight: 24,
         color: 'black',
+        marginBottom: 10
     },
     workoutName: {
         fontSize: 25,
-        marginBottom: 10,
+        fontWeight: "bold"
     },
+    button: {
+        padding: 15,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
+        borderRadius: 10,
+        margin: 15,
+        shadowColor: '#680747',
+        shadowOffset: {width: -2, height: 4},
+        shadowOpacity: 10,
+        shadowRadius: 5,
+      }
 });

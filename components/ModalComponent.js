@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Text, View, Button, Alert, StyleSheet, FlatList, Image, TextInput, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
+import { Modal, Text, View, Button, Alert, StyleSheet, FlatList, Image, TextInput, Pressable } from "react-native";
 import { push, ref, set } from 'firebase/database';
 import RNModal from 'react-native-modal'
 
@@ -29,7 +29,9 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
             <View style={styles.item}>
                 <Text style={styles.itemText}>{item.name}</Text>
                 <Image style={{ width: 250, height: 100 }} source={{ uri: item.gifUrl }} />
-                <Button title="Delete" onPress={() => deleteExercise(index)} />
+                <Pressable style={styles.button} onPress={() => deleteExercise(index)}>
+                    <Text>Delete</Text>
+                </Pressable>
             </View>
         );
     };
@@ -56,6 +58,7 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
                         <TextInput
                             style={styles.input}
                             placeholder='Insert workout name'
+                            placeholderTextColor={"grey"}
                             value={workoutName}
                             onChangeText={setWorkoutName}
                         />
@@ -78,9 +81,17 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
                                 <Text>No exercises added yet</Text>
                             </View>
                         }
-                        <Button title="Save" onPress={saveWorkout} />
-                        <Button title="Close" onPress={() => setModalVisible(false)} />
-                        <Button title="Reset" onPress={() => setAddedExercises([])} />
+                        <View style={{flexDirection: "row"}}>
+                            <Pressable onPress={saveWorkout} style={styles.button}>
+                                <Text>Save</Text>
+                            </Pressable>
+                            <Pressable onPress={() => setModalVisible(false)} style={styles.button}>
+                                <Text>Close</Text>
+                            </Pressable>
+                            <Pressable onPress={() => setAddedExercises([])} style={styles.button}>
+                                <Text>Reset</Text>
+                            </Pressable>
+                        </View>
                     </View>
                 </View>
         </RNModal>
@@ -126,9 +137,9 @@ const styles = StyleSheet.create({
     },
     itemText: {
         fontSize: 16,
-        fontFamily: 'Cochin',
         lineHeight: 24,
         color: 'black',
+        marginBottom: 7
     },
     input: {
         width: 250,
@@ -139,4 +150,17 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         color: "black"
     },
+    button: {
+        padding: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
+        borderRadius: 10,
+        marginTop: 15,
+        marginRight: 15,
+        shadowColor: '#680747',
+        shadowOffset: {width: -2, height: 4},
+        shadowOpacity: 10,
+        shadowRadius: 5,
+      }
 });

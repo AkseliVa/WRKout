@@ -74,12 +74,14 @@ export default function NewWorkout({database}) {
         return (
         <View style={styles.item}>
             <Text style={styles.itemText}>{item.name}</Text>
-            <Image style={{width:250, height: 100}}
+            <Image style={{width:250, height: 200}}
                 source={{uri: item.gifUrl}} />
             {isAdded ? (
                 <AntDesign style={{paddingTop: 15}} name="checkcircle" size={24} color="black" />
             ) : (
-            <Button title="ADD TO WORKOUT" onPress={() => AddExercise(item)} />
+            <Pressable style={styles.button} onPress={() => AddExercise(item)}>
+                <Text>ADD TO WORKOUT</Text>
+            </Pressable>
             )}
         </View>
         )
@@ -152,7 +154,7 @@ export default function NewWorkout({database}) {
             <Pressable style={styles.button} onPress={searchExercise}>
                 <Text>Search</Text>
             </Pressable>
-            {exercises && (
+            {exercises.length > 0 ? (
             <View style={{flex: 1, width: "100%"}}>
                  <FlatList 
                     data={exercises}
@@ -163,6 +165,11 @@ export default function NewWorkout({database}) {
                     }}
                 />
             </View>
+            ) : (
+                <View style={{alignItems: "center"}}>
+                    <Text style={{color: "white", fontSize: 20, marginTop: 50, fontWeight: "bold"}}>No exercises searched or bad</Text>
+                    <Text style={{color: "white", fontSize: 20, fontWeight: "bold"}}>search term</Text>
+                </View>
             )}
         </View>
     )
@@ -173,6 +180,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: "center",
+      justifyContent: "center",
       backgroundColor: "#bb0d22",
     },
     input: {
@@ -209,9 +217,9 @@ const styles = StyleSheet.create({
       },
       itemText: {
         fontSize: 16,
-        fontFamily: 'Cochin',
         lineHeight: 24,
         color: 'black',
+        marginBottom: 7
       },
       button: {
         padding: 15,
