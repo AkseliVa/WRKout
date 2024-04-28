@@ -4,17 +4,28 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {app, database} from './components/firebase'
+import { useState, useEffect } from 'react';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import Home from './components/Home';
 import NewWorkout from './components/NewWorkout';
 import MyWorkouts from './components/MyWorkouts';
-import { MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-paper';
+import Login from './components/Login';
 
 const Tab = createBottomTabNavigator()
 
 export default function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth(app)
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+    return unsubscribe;
+  }, []);
+
   return (
-    <PaperProvider>
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -24,7 +35,7 @@ export default function App() {
           tabBarStyle: {
             backgroundColor: "#4d0b0b"
           },
-          tabBarIcon: ({  color, size }) => {
+          tabBarIcon: ({ size }) => {
             let iconName;
 
             if (route.name === "Home") {
@@ -33,6 +44,8 @@ export default function App() {
               iconName="weight-lifter"
             } else if (route.name === "My Workouts") {
               iconName="history"
+            } else if (route.name === "Login") {
+              iconName="login"
             }
 
             return <MaterialCommunityIcons name={iconName} size={size} color={"white"} />
@@ -55,23 +68,26 @@ export default function App() {
         >
           {() => <NewWorkout database={database} />}
         </Tab.Screen>
-        <Tab.Screen 
-          name="My Workouts"
-          options={{ 
-            headerTintColor: "white"
-          }} 
-        >
-          {() => <MyWorkouts database={database} />}
-        </Tab.Screen>
+        {user && (
+          <Tab.Screen 
+            name="My Workouts"
+            component={MyWorkouts}
+            options={{ 
+              headerTintColor: "white"
+            }} 
+          />
+        )}
+        {!user && (
+          <Tab.Screen 
+            name="Login"
+            component={Login}
+            options={{ 
+              headerTintColor: "white"
+            }} 
+          />
+        )}
       </Tab.Navigator>
     </NavigationContainer>
-    </PaperProvider>
   );
   
 }
-
-const styles = StyleSheet.create({
-  topNav: {
-    backgroundColor: "#c3195d"
-  }
-});
