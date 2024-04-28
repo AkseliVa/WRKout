@@ -1,5 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -19,13 +17,13 @@ export default function App() {
   const [userId, setUserId] = useState(null)
 
   useEffect(() => {
-    const auth = getAuth(); // Get the auth instance
+    const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       if (user) {
-        setUserId(user.uid); // Set user ID if user is authenticated
+        setUserId(user.uid);
       } else {
-        setUserId(null); // Reset user ID if user is not authenticated
+        setUserId(null);
       }
     });
     return unsubscribe;
