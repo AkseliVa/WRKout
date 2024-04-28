@@ -1,34 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, View, FlatList, Image, Button, TouchableOpacity, Pressable } from 'react-native';
 import { ref, set, onValue } from 'firebase/database';
+import { database } from './firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-export default function MyWorkouts({ database }) {
+export default function MyWorkouts() {
     const [workouts, setWorkouts] = useState([]);
+    const [userId, setUserId] = useState(null)
 
     useEffect(() => {
-        const fetchWorkouts = () => {
-            const itemsRef = ref(database, 'workouts/');
-            onValue(itemsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    const workoutsArray = Object.keys(data).map((key) => ({
-                        id: key,
-                        name: data[key].workoutName,
-                        exercises: data[key].exercises,
-                        isExpanded: false,
-                    }));
-                    setWorkouts(workoutsArray);
-                } else {
-                    setWorkouts([]);
-                }
-            });
-        };
+        const auth = getAuth();
+        const user = auth.currentUser;
 
-        fetchWorkouts();
-    }, [database]);
+            setUserId(user.uid);
+            const fetchWorkouts = () => {
+                const itemsRef = ref(database, `users/${user.uid}/workouts/`);
+                onValue(itemsRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        const workoutsArray = Object.keys(data).map((key) => ({
+                            id: key,
+                            name: data[key].workoutName,
+                            exercises: data[key].exercises,
+                            isExpanded: false,
+                        }));
+                        setWorkouts(workoutsArray);
+                    } else {
+                        setWorkouts([]);
+                    }
+                });
+            };
 
-    const deleteWorkout = (workoutId) => {
-        const workoutRef = ref(database, `workouts/${workoutId}`);
+            fetchWorkouts();
+
+    }, []);
+
+    const deleteWorkout = (workoutId, userId) => {
+        const workoutRef = ref(database, `users/${userId}/workouts/${workoutId}`);
         set(workoutRef, null)
             .then(() => {
                 console.log('Workout deleted successfully');
@@ -54,7 +62,7 @@ export default function MyWorkouts({ database }) {
                 </Pressable>
                 {item.isExpanded && (
                     <>
-                    <Pressable style={styles.button} onPress={() => deleteWorkout(item.id)}>
+                    <Pressable style={styles.button} onPress={() => deleteWorkout(item.id, userId)}>
                         <Text>Delete</Text>
                     </Pressable>
                     <View style={{flex: 1, width: "100%"}}>

@@ -9,7 +9,7 @@ import SearchTermItems from "./SearchTermItem";
 import BodypartItem from "./BodypartItem";
 import EquipmentItem from "./EquipmentItem";
 
-export default function NewWorkout({database}) {
+export default function NewWorkout({database, userId}) {
     const [exercises, setExercises] = useState([])
     const [addedExercises, setAddedExercises] = useState([])
 
@@ -106,6 +106,7 @@ export default function NewWorkout({database}) {
                 setAddedExercises={setAddedExercises}
                 addedExercises={addedExercises}
                 database={database}
+                userId={userId}
             />
             <Text style={{fontWeight: "bold", fontSize: 20, margin: 15, color: "white"}}>Search for exercises</Text>
             <TouchableWithoutFeedback onPress={closeDropDown}>

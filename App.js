@@ -16,11 +16,17 @@ const Tab = createBottomTabNavigator()
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null)
 
   useEffect(() => {
-    const auth = getAuth(app)
+    const auth = getAuth(); // Get the auth instance
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      if (user) {
+        setUserId(user.uid); // Set user ID if user is authenticated
+      } else {
+        setUserId(null); // Reset user ID if user is not authenticated
+      }
     });
     return unsubscribe;
   }, []);
@@ -66,7 +72,7 @@ export default function App() {
             headerTintColor: "white"
           }} 
         >
-          {() => <NewWorkout database={database} />}
+          {() => <NewWorkout database={database} user={user} userId={userId} />}
         </Tab.Screen>
         {user && (
           <Tab.Screen 
