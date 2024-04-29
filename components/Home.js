@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, StyleSheet, View, Image, Button } from 'react-native';
+import { Text, StyleSheet, View, Image, Pressable, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 export default function Home() {
-return (
+    return (
         <View style={styles.container}>
             <Image
                 style={{ width: 250, height: 100, marginTop: -70, marginBottom: 50, borderRadius: 10 }}
@@ -44,4 +45,16 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
     },
+    button: {
+        padding: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
+        borderRadius: 10,
+        marginTop: 15,
+        shadowColor: '#680747',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 10,
+        shadowRadius: 5,
+    }
 });

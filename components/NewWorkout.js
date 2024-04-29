@@ -3,6 +3,7 @@ import {  useState, forwardRef } from "react";
 import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Button, Alert, Keyboard, FlatList, Image, Pressable } from "react-native"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { AntDesign } from '@expo/vector-icons';
+import { auth } from "./firebase";
 
 import ModalComponent from "../components/ModalComponent";
 import SearchTermItems from "./SearchTermItem";
@@ -79,9 +80,11 @@ export default function NewWorkout({database, userId}) {
             {isAdded ? (
                 <AntDesign style={{paddingTop: 15}} name="checkcircle" size={24} color="black" />
             ) : (
+                auth.currentUser && (
             <Pressable style={styles.button} onPress={() => AddExercise(item)}>
                 <Text>ADD TO WORKOUT</Text>
             </Pressable>
+                )
             )}
         </View>
         )
@@ -97,6 +100,8 @@ export default function NewWorkout({database, userId}) {
 
       return (
         <View style={styles.container}>
+            {auth.currentUser && (
+            <>
             <Pressable style={styles.button} onPress={() => setModalVisible(true)}>
                 <Text style={styles.text}>Show Workout</Text>
             </Pressable>
@@ -108,6 +113,8 @@ export default function NewWorkout({database, userId}) {
                 database={database}
                 userId={userId}
             />
+            </>
+            )}
             <Text style={{fontWeight: "bold", fontSize: 20, margin: 15, color: "white"}}>Search for exercises</Text>
             <TouchableWithoutFeedback onPress={closeDropDown}>
                 <View style={styles.highestDropdown}>

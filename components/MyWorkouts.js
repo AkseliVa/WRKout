@@ -6,33 +6,39 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export default function MyWorkouts() {
     const [workouts, setWorkouts] = useState([]);
-    const [userId, setUserId] = useState(null)
+    const [userId, setUserId] = useState(null);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const auth = getAuth();
-        const user = auth.currentUser;
-
-            setUserId(user.uid);
-            const fetchWorkouts = () => {
-                const itemsRef = ref(database, `users/${user.uid}/workouts/`);
-                onValue(itemsRef, (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        const workoutsArray = Object.keys(data).map((key) => ({
-                            id: key,
-                            name: data[key].workoutName,
-                            exercises: data[key].exercises,
-                            isExpanded: false,
-                        }));
-                        setWorkouts(workoutsArray);
-                    } else {
-                        setWorkouts([]);
-                    }
-                });
-            };
-
-            fetchWorkouts();
-
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+            if (user) {
+                setUserId(user.uid);
+                const fetchWorkouts = () => {
+                    const itemsRef = ref(database, `users/${user.uid}/workouts/`);
+                    onValue(itemsRef, (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            const workoutsArray = Object.keys(data).map((key) => ({
+                                id: key,
+                                name: data[key].workoutName,
+                                exercises: data[key].exercises,
+                                isExpanded: false,
+                            }));
+                            setWorkouts(workoutsArray);
+                        } else {
+                            setWorkouts([]);
+                        }
+                    });
+                };
+                fetchWorkouts();
+            } else {
+                setUserId(null);
+                setWorkouts([]);
+            }
+        });
+        return unsubscribe;
     }, []);
 
     const deleteWorkout = (workoutId, userId) => {
@@ -88,8 +94,8 @@ export default function MyWorkouts() {
 
     return (
         <View style={styles.container}>
-            {workouts.length > 0 ? (
-                <View style={{flex: 1, width: "100%"}}>
+            {user ? (
+                workouts.length > 0 ? (
                     <FlatList
                         data={workouts}
                         renderItem={renderItem}
@@ -98,9 +104,11 @@ export default function MyWorkouts() {
                             flexGrow: 1,
                         }}
                     />
-                </View>
+                ) : (
+                    <Text style={{color: "white", fontSize: 30, fontWeight: "bold"}}>No workouts yet</Text>
+                )
             ) : (
-                <Text style={{color: "white", fontSize: 30, fontWeight: "bold"}}>No workouts yet</Text>
+                <Text style={{color: "white", fontSize: 20}}>You must be logged in to save workouts</Text>
             )}
         </View>
     );

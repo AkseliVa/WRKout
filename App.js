@@ -1,20 +1,20 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {app, database} from './components/firebase'
 import { useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import {app, database} from './components/firebase'
 
 import Home from './components/Home';
 import NewWorkout from './components/NewWorkout';
+import Login from './components/Login'
 import MyWorkouts from './components/MyWorkouts';
-import Login from './components/Login';
 
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [userId, setUserId] = useState(null)
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
@@ -43,27 +43,28 @@ export default function App() {
             let iconName;
 
             if (route.name === "Home") {
-              iconName="home"
+              iconName = "home";
             } else if (route.name === "New Workout") {
-              iconName="weight-lifter"
+              iconName = "weight-lifter";
             } else if (route.name === "My Workouts") {
-              iconName="history"
+              iconName = "history";
             } else if (route.name === "Login") {
-              iconName="login"
+              user ? iconName = "logout" :
+              iconName = "login";
             }
 
-            return <MaterialCommunityIcons name={iconName} size={size} color={"white"} />
+            return <MaterialCommunityIcons name={iconName} size={size} color={"white"} />;
           },
         })}
       >
         <Tab.Screen 
           name="Home" 
-          component={Home}
           options={{ 
             headerTintColor: "white",
           }}  
-        >           
-          </Tab.Screen>
+        >
+          {() => <Home user={user} />}
+        </Tab.Screen>
         <Tab.Screen 
           name="New Workout"
           options={{ 
@@ -72,7 +73,6 @@ export default function App() {
         >
           {() => <NewWorkout database={database} user={user} userId={userId} />}
         </Tab.Screen>
-        {user && (
           <Tab.Screen 
             name="My Workouts"
             component={MyWorkouts}
@@ -80,18 +80,13 @@ export default function App() {
               headerTintColor: "white"
             }} 
           />
-        )}
-        {!user && (
           <Tab.Screen 
             name="Login"
             component={Login}
             options={{ 
               headerTintColor: "white"
-            }} 
-          />
-        )}
+            }} />
       </Tab.Navigator>
     </NavigationContainer>
   );
-  
 }
