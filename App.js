@@ -2,8 +2,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import {app, database} from './components/firebase'
+import { getAuth, onAuthStateChanged  } from 'firebase/auth';
+import { database} from './components/firebase'
 
 import Home from './components/Home';
 import NewWorkout from './components/NewWorkout';

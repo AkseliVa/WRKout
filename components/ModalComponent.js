@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Modal, Text, View, Button, Alert, StyleSheet, FlatList, Image, TextInput, Pressable } from "react-native";
-import { push, ref, set } from 'firebase/database';
+import { Text, View, Alert, StyleSheet, FlatList, Image, TextInput, Pressable } from "react-native";
+import { ref, set } from 'firebase/database';
 import RNModal from 'react-native-modal'
 
 const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, addedExercises, database, userId, user }) => {

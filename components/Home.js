@@ -1,7 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, View, Image, Pressable, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { Text, StyleSheet, View, Image } from 'react-native';
 
 export default function Home() {
     return (
