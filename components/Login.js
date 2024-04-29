@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TextInput, Button, Image, Alert, Pressable } fr
 import { getAuth, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from "./firebase";
 
-export default function Login() {
+export default function Login({user}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -45,7 +45,7 @@ export default function Login() {
                 style={styles.logo}
                 source={require('../WRKOUT-logo.png')}
             />
-            {!auth.currentUser ? (
+            {!user ? (
                 <>
                     <Text style={styles.header}>Login</Text>
                     <TextInput

@@ -82,10 +82,9 @@ export default function App() {
           />
           <Tab.Screen 
             name="Login"
-            component={Login}
-            options={{ 
-              headerTintColor: "white"
-            }} />
+          >
+            {() => <Login user={user}/>}
+            </Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
   );
