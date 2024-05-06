@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {  useState, forwardRef } from "react";
-import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Button, Alert, Keyboard, FlatList, Image, Pressable } from "react-native"
+import { Text, StyleSheet, View, TextInput, TouchableWithoutFeedback, Alert, Keyboard, FlatList, Image, Pressable } from "react-native"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { AntDesign } from '@expo/vector-icons';
 

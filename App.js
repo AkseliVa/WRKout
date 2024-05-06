@@ -1,9 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {app, database} from './components/firebase'
+import { database} from './components/firebase'
 
 import Home from './components/Home';
 import NewWorkout from './components/NewWorkout';
@@ -24,7 +22,7 @@ export default function App() {
           tabBarStyle: {
             backgroundColor: "#4d0b0b"
           },
-          tabBarIcon: ({  color, size }) => {
+          tabBarIcon: ({ size }) => {
             let iconName;
 
             if (route.name === "Home") {
@@ -69,9 +67,4 @@ export default function App() {
   );
   
 }
-
-const styles = StyleSheet.create({
-  topNav: {
-    backgroundColor: "#c3195d"
-  }
-});
+;
