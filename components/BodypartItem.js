@@ -11,6 +11,7 @@ const BodypartItem = () => {
         { label: 'Neck', value: 'neck' },
         { label: 'Shoulders', value: 'shoulders' },
         { label: 'Upper arms', value: 'upper%20arms' },
+        {label: 'Upper legs', value: 'upper%20legs'}
     ]);
 
     return [bodypartItems, setBodypartItems];
