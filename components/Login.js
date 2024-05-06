@@ -32,6 +32,7 @@ export default function Login({user}) {
     const handleSignUp = async () => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
+            Alert.alert("Signed in successfully");
             console.log(response);
         } catch (error) {
             console.log(error);
