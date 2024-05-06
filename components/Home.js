@@ -18,6 +18,7 @@ export default function Home() {
             <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>* Equipment</Text>
             <Text style={styles.text}>In the "My Workouts" you</Text>
             <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold', marginLeft: 7, marginRight: 7 }}>can view your saved workouts</Text>
+            <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold', marginLeft: 7, marginRight: 7 }}>(Must be signed in)</Text>
         </View>
     );
 }
