@@ -1,34 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, FlatList, Image, Button, TouchableOpacity, Pressable } from 'react-native';
+import { Text, StyleSheet, View, FlatList, Image, Pressable } from 'react-native';
 import { ref, set, onValue } from 'firebase/database';
+import { database } from './firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-export default function MyWorkouts({ database }) {
+export default function MyWorkouts() {
     const [workouts, setWorkouts] = useState([]);
+    const [userId, setUserId] = useState(null);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const fetchWorkouts = () => {
-            const itemsRef = ref(database, 'workouts/');
-            onValue(itemsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    const workoutsArray = Object.keys(data).map((key) => ({
-                        id: key,
-                        name: data[key].workoutName,
-                        exercises: data[key].exercises,
-                        isExpanded: false,
-                    }));
-                    setWorkouts(workoutsArray);
-                } else {
-                    setWorkouts([]);
-                }
-            });
-        };
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+            if (user) {
+                setUserId(user.uid);
+                const fetchWorkouts = () => {
+                    const itemsRef = ref(database, `users/${user.uid}/workouts/`);
+                    onValue(itemsRef, (snapshot) => {
+                        const data = snapshot.val();
+                        if (data) {
+                            const workoutsArray = Object.keys(data).map((key) => ({
+                                id: key,
+                                name: data[key].workoutName,
+                                exercises: data[key].exercises,
+                                isExpanded: false,
+                            }));
+                            setWorkouts(workoutsArray);
+                        } else {
+                            setWorkouts([]);
+                        }
+                    });
+                };
+                fetchWorkouts();
+            } else {
+                setUserId(null);
+                setWorkouts([]);
+            }
+        });
+        return unsubscribe;
+    }, []);
 
-        fetchWorkouts();
-    }, [database]);
-
-    const deleteWorkout = (workoutId) => {
-        const workoutRef = ref(database, `workouts/${workoutId}`);
+    const deleteWorkout = (workoutId, userId) => {
+        const workoutRef = ref(database, `users/${userId}/workouts/${workoutId}`);
         set(workoutRef, null)
             .then(() => {
                 console.log('Workout deleted successfully');
@@ -54,7 +68,7 @@ export default function MyWorkouts({ database }) {
                 </Pressable>
                 {item.isExpanded && (
                     <>
-                    <Pressable style={styles.button} onPress={() => deleteWorkout(item.id)}>
+                    <Pressable style={styles.button} onPress={() => deleteWorkout(item.id, userId)}>
                         <Text>Delete</Text>
                     </Pressable>
                     <View style={{flex: 1, width: "100%"}}>
@@ -80,8 +94,8 @@ export default function MyWorkouts({ database }) {
 
     return (
         <View style={styles.container}>
-            {workouts.length > 0 ? (
-                <View style={{flex: 1, width: "100%"}}>
+            {user ? (
+                workouts.length > 0 ? (
                     <FlatList
                         data={workouts}
                         renderItem={renderItem}
@@ -90,9 +104,11 @@ export default function MyWorkouts({ database }) {
                             flexGrow: 1,
                         }}
                     />
-                </View>
+                ) : (
+                    <Text style={{color: "white", fontSize: 30, fontWeight: "bold"}}>No workouts yet</Text>
+                )
             ) : (
-                <Text style={{color: "white", fontSize: 30, fontWeight: "bold"}}>No workouts yet</Text>
+                <Text style={{color: "white", fontSize: 20}}>You must be logged in to save workouts</Text>
             )}
         </View>
     );

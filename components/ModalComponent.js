@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Modal, Text, View, Button, Alert, StyleSheet, FlatList, Image, TextInput, Pressable } from "react-native";
-import { push, ref, set } from 'firebase/database';
+import { Text, View, Alert, StyleSheet, FlatList, Image, TextInput, Pressable } from "react-native";
+import { ref, set } from 'firebase/database';
 import RNModal from 'react-native-modal'
 
-const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, addedExercises, database }) => {
+const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, addedExercises, database, userId, user }) => {
     const [workoutName, setWorkoutName] = useState("");
 
     const workoutSavedAlert = () =>
@@ -16,7 +16,7 @@ const ModalComponent = ({ modalVisible, setModalVisible, setAddedExercises, adde
         Alert.alert("Error", "Workout must have a name")
       } else {
         const workoutKey = workoutName;
-        const workoutRef = ref(database, `workouts/${workoutKey}`);
+        const workoutRef = ref(database, `users/${userId}/workouts/${workoutKey}`);
         set(workoutRef, { workoutName, exercises: addedExercises });
         setWorkoutName("")
         setAddedExercises([]);
