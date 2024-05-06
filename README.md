@@ -8,3 +8,8 @@ WRKout is a mobile app built using React Native and [exerciseDB](https://rapidap
 - React-Native
 - Firebase
 - React-Native components such as dropdown-picker and RNModal
+
+## Usage
+
+1. Clone the repository
+   `git clone https://github.com/AkseliVa/WRKout.git`
