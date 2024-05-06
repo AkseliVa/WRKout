@@ -10,6 +10,7 @@ WRKout is a mobile app built using React Native and [exerciseDB](https://rapidap
 - React-Native components such as dropdown-picker and RNModal
 
 ## Usage
+Make sure you have React-native installed and Expo on your computer and Expo-Go in your mobile app
 
 1. Clone the repository
    ---
