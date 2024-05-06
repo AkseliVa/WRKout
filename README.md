@@ -30,3 +30,5 @@ Make sure you have React-native installed and Expo on your computer and Expo-Go 
 5. Start the project using Expo
    ---
    `npx expo start`
+
+(https://github.com/AkseliVa/WRKout/issues/1#issue-2280814370)
