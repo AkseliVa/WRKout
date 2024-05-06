@@ -12,4 +12,5 @@ WRKout is a mobile app built using React Native and [exerciseDB](https://rapidap
 ## Usage
 
 1. Clone the repository
+   ---
    `git clone https://github.com/AkseliVa/WRKout.git`
