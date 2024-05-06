@@ -1,6 +1,7 @@
 # WRKout
 
-WRKout is a mobile app built using React Native to help gym goers and people wanting to workout find exercises and movements that they like.
+WRKout is a mobile app built using React Native and [exerciseDB](https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb/)
+ to help gym goers and people wanting to workout find exercises and movements that they like.
 
 ## Technologies
 
