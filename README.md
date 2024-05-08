@@ -18,17 +18,28 @@ Make sure you have React-native installed and Expo on your computer and Expo-Go 
 
 2. Navigate to your project directory 
    ---
+   `cd your-project-directory`
 
-3. Open the project in your code editor
+4. Open the project in your code editor
    ---
    `code .`
 
-4. Install dependencies
+5. Install dependencies
    ---
    `npm install`
 
-5. Start the project using Expo
+6. Start the project using Expo
    ---
    `npx expo start`
 
-![Project Screenshot](./Wrkoutss1)
+You can search for movements in the "New Workout"-page
+
+![Project Screenshot](./Wrkoutss1.PNG)
+
+Add them to your database by pressing the "Show Workout"-button and pressing "Save"
+
+![Project Screenshot](./Wrkoutss2.PNG)
+
+And view them in the "My Workouts"-page
+
+![Project Screenshot](./Wrkoutss3.PNG)
